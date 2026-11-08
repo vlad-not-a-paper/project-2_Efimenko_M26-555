@@ -1,45 +1,57 @@
-from .utils import load_metadata, save_metadata
-from .core import create_table, drop_table
-
-import prompt
 import shlex
 
+import prompt
+
+from .core import create_table, drop_table, list_tables
+from .utils import load_metadata, save_metadata
+
 META_FILE = "db_meta.json"
+
 
 def welcome():
     """Prints the first message for the current mode."""
 
-    print('project')
-    print('\nПервая попытка запустить проект!')
-    print('\n***')
-    print('\n<command> exit - выйти из программы')
-    print('<command> help - справочная информация')
+    print("project")
+    print("\nПервая попытка запустить проект!")
+    print("\n***")
+    print("\n<command> exit - выйти из программы")
+    print("<command> help - справочная информация")
     while True:
-        input_command = prompt.string('Введите команду: ')
-        if input_command == 'help':
+        input_command = prompt.string("Введите команду: ")
+        if input_command == "help":
             print_help()
-        elif input_command == 'exit':
+        elif input_command == "exit":
             break
         else:
-            print('Неправильно введена команда')
+            print("Неправильно введена команда")
+
 
 def run():
     # welcome()
     print_help()
     while True:
         metadata = load_metadata(META_FILE)
-        user_input = prompt.string('>>>Введите команду: ')
+        user_input = prompt.string(">>>Введите команду: ")
         args = shlex.split(user_input)
         command = args[0]
         match command:
-            case 'create_table':
+            case "create_table":
                 table_name = args[1]
                 columns = args[2:]
                 create_table(metadata, table_name, columns)
-            case 'drop_table':
+            case "drop_table":
                 table_name = args[1]
                 drop_table(metadata, table_name)
+            case "list_tables":
+                list_tables(metadata)
+            case "help":
+                print_help()
+            case "exit":
+                break
+            case _:
+                print("Неправильно введена команда")
         save_metadata(META_FILE, metadata)
+
 
 def print_help():
     """Prints the help message for the current mode."""
