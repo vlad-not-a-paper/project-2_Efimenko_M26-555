@@ -1,18 +1,20 @@
 [project]
 name = "primitive-db"
 version = "0.1.0"
-description = "Add your description here"
+description = "Primitive console database with tables and CRUD operations stored in JSON files"
 readme = "README.md"
 authors = [
     { name = "vlad-not-a-paper", email = "vladyslav.efimenko@gmail.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "prettytable>=3.18.0",
     "prompt>=0.4.1",
 ]
 
 [project.scripts]
 project = "primitive_db.main:main"
+database = "primitive_db.main:main"
 
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
