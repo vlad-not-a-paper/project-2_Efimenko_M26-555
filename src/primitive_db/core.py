@@ -1,4 +1,10 @@
-from .constants import COLUMN_SEPARATOR, ID_COLUMN, ID_TYPE, VALID_TYPES
+from .constants import (
+    COLUMN_SEPARATOR,
+    FIRST_ID,
+    ID_COLUMN,
+    ID_TYPE,
+    VALID_TYPES,
+)
 from .decorators import confirm_action, create_cacher, handle_db_errors, log_time
 
 select_cache = create_cacher()
@@ -12,26 +18,26 @@ def create_table(metadata, table_name, columns):
     elif not table_name.isidentifier():
         print(f"Некорректное значение: {table_name}. Попробуйте снова.")
     else:
-        flag = True
+        is_valid = True
         column_names = [ID_COLUMN]
         for column in columns:
             if column.count(COLUMN_SEPARATOR) == 1:
                 column_name, column_type = column.split(COLUMN_SEPARATOR)
             else:
                 print(f"Некорректное значение: {column}. Попробуйте снова.")
-                flag = False
+                is_valid = False
                 break
             if not column_name.isidentifier() or column_name in column_names:
                 print(f"Некорректное значение: {column_name}. Попробуйте снова.")
-                flag = False
+                is_valid = False
                 break
             if column_type not in VALID_TYPES:
                 print(f"Некорректное значение: {column_type}. Попробуйте снова.")
-                flag = False
+                is_valid = False
                 break
             column_names.append(column_name)
         table_columns = [f"{ID_COLUMN}{COLUMN_SEPARATOR}{ID_TYPE}"]
-        if flag:
+        if is_valid:
             table_columns.extend(columns)
             metadata[table_name] = table_columns
             columns_str = ", ".join(table_columns)
@@ -109,7 +115,7 @@ def insert(metadata, table_name, values, table_data):
         print(f"Ошибка: Таблица \"{table_name}\" ожидает {len(columns)} "
               f"значений, получено {len(values)}.")
         return None
-    record_id = 1
+    record_id = FIRST_ID
     if table_data:
         record_id = max(record[ID_COLUMN] for record in table_data) + 1
     record = {ID_COLUMN: record_id}
@@ -144,14 +150,14 @@ def update(table_name, table_data, set_clause, where_clause):
     """Updates fields of the records that match the where clause."""
     if ID_COLUMN in set_clause:
         raise ValueError(ID_COLUMN)
-    flag = False
+    is_found = False
     for record in table_data:
         if is_matching(record, where_clause):
             record.update(set_clause)
-            flag = True
+            is_found = True
             print(f'Запись с ID={record[ID_COLUMN]} в таблице "{table_name}" '
                   f'успешно обновлена.')
-    if not flag:
+    if not is_found:
         print("Записи, подходящие под условие, не найдены.")
     return table_data
 
@@ -161,14 +167,14 @@ def update(table_name, table_data, set_clause, where_clause):
 def delete(table_name, table_data, where_clause):
     """Deletes the records that match the where clause."""
     remaining_records = []
-    flag = False
+    is_found = False
     for record in table_data:
         if is_matching(record, where_clause):
-            flag = True
+            is_found = True
             print(f'Запись с ID={record[ID_COLUMN]} успешно удалена из таблицы '
                   f'"{table_name}".')
         else:
             remaining_records.append(record)
-    if not flag:
+    if not is_found:
         print("Записи, подходящие под условие, не найдены.")
     return remaining_records

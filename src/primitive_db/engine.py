@@ -101,6 +101,8 @@ def handle_create_table(metadata, user_input):
 def handle_drop_table(metadata, user_input):
     """Handles the drop_table command."""
     table_name = parse_table_name(user_input)
+    if not table_exists(metadata, table_name):
+        return
     metadata = drop_table(metadata, table_name)
     if metadata is not None:
         save_metadata(META_FILE, metadata)

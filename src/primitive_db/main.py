@@ -4,6 +4,7 @@ from .engine import run
 
 
 def main() -> None:
+    """Starts the database application."""
     run()
 
 

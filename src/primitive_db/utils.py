@@ -1,14 +1,14 @@
 import json
 import os
 
-from .constants import DATA_DIR, DATA_FILE_EXTENSION
+from .constants import DATA_DIR, DATA_FILE_EXTENSION, FILE_ENCODING
 
 
 def load_metadata(filepath):
     """Loads metadata from a JSON file or returns an empty dict."""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        with open(filepath, "r", encoding=FILE_ENCODING) as file:
+            data = json.load(file)
             return data
     except FileNotFoundError:
         return {}
@@ -16,8 +16,8 @@ def load_metadata(filepath):
 
 def save_metadata(filepath, data):
     """Saves metadata to a JSON file."""
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f)
+    with open(filepath, "w", encoding=FILE_ENCODING) as file:
+        json.dump(data, file)
 
 
 def get_table_path(table_name):
@@ -28,8 +28,8 @@ def get_table_path(table_name):
 def load_table_data(table_name):
     """Loads table records from its JSON file or returns an empty list."""
     try:
-        with open(get_table_path(table_name), "r", encoding="utf-8") as f:
-            data = json.load(f)
+        with open(get_table_path(table_name), "r", encoding=FILE_ENCODING) as file:
+            data = json.load(file)
             return data
     except FileNotFoundError:
         return []
@@ -38,8 +38,8 @@ def load_table_data(table_name):
 def save_table_data(table_name, data):
     """Saves table records to its JSON file."""
     os.makedirs(DATA_DIR, exist_ok=True)
-    with open(get_table_path(table_name), "w", encoding="utf-8") as f:
-        json.dump(data, f)
+    with open(get_table_path(table_name), "w", encoding=FILE_ENCODING) as file:
+        json.dump(data, file)
 
 
 def delete_table_data(table_name):

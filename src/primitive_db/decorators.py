@@ -2,7 +2,7 @@ import time
 
 import prompt
 
-from .constants import CONFIRM_ANSWER
+from .constants import CONFIRM_ANSWER, TIME_PRECISION
 
 
 def handle_db_errors(func):
@@ -50,7 +50,7 @@ def log_time(func):
         result = func(*args, **kwargs)
         end_time = time.monotonic()
         print(f"Функция {func.__name__} выполнилась за "
-              f"{end_time - start_time:.3f} секунд")
+              f"{end_time - start_time:.{TIME_PRECISION}f} секунд")
         return result
 
     return wrapper

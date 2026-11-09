@@ -3,9 +3,14 @@ import shlex
 from .constants import (
     BOOL_VALUES,
     CONDITION_SEPARATOR,
+    FROM_KEYWORD,
+    INTO_KEYWORD,
     QUOTES,
     SET_KEYWORD,
+    VALUES_END,
+    VALUES_KEYWORD,
     VALUES_SEPARATOR,
+    VALUES_START,
     WHERE_KEYWORD,
 )
 
@@ -73,7 +78,7 @@ def parse_set_clause(set_text):
 def parse_values(values_text):
     """Turns a string like '("Sergei", 28, true)' into a list of values."""
     text = values_text.strip()
-    if not (text.startswith("(") and text.endswith(")")):
+    if not (text.startswith(VALUES_START) and text.endswith(VALUES_END)):
         raise ValueError(text)
     inner_text = text[1:-1]
     values = []
@@ -111,7 +116,7 @@ def parse_table_name(user_input):
 def parse_insert(user_input):
     """Parses 'insert into <table> values (...)' into name and values."""
     parts = user_input.split(maxsplit=4)
-    if len(parts) != 5 or parts[1] != "into" or parts[3] != "values":
+    if len(parts) != 5 or parts[1] != INTO_KEYWORD or parts[3] != VALUES_KEYWORD:
         raise ValueError(user_input)
     return parts[2], parse_values(parts[4])
 
@@ -120,7 +125,7 @@ def parse_select(user_input):
     """Parses 'select from <table> [where ...]' into name and where clause."""
     head, where_clause = split_where(user_input)
     parts = head.split()
-    if len(parts) != 3 or parts[1] != "from":
+    if len(parts) != 3 or parts[1] != FROM_KEYWORD:
         raise ValueError(user_input)
     return parts[2], where_clause
 
@@ -143,6 +148,6 @@ def parse_delete(user_input):
     """Parses 'delete from <table> where ...' into name and where clause."""
     head, where_clause = split_where(user_input)
     parts = head.split()
-    if where_clause is None or len(parts) != 3 or parts[1] != "from":
+    if where_clause is None or len(parts) != 3 or parts[1] != FROM_KEYWORD:
         raise ValueError(user_input)
     return parts[2], where_clause
