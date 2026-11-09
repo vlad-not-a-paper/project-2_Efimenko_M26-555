@@ -9,7 +9,7 @@
 Нужен [uv](https://docs.astral.sh/uv/) версии 0.5 и выше.
 
 ```bash
-git clone <ссылка на репозиторий>
+git clone https://github.com/vlad-not-a-paper/project-2_Efimenko_M26-555.git
 cd project-2_Efimenko_M26-555
 uv sync        # или: make install
 ```
@@ -141,8 +141,3 @@ src/primitive_db/
 ```bash
 uv run ruff check .    # или: make lint
 ```
-
-## Демонстрация
-
-<!-- TODO: вставьте сюда ссылку на запись asciinema -->
-[![asciicast](https://asciinema.org/a/<ID_ЗАПИСИ>.svg)](https://asciinema.org/a/<ID_ЗАПИСИ>)
