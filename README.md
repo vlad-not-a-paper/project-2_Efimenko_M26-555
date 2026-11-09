@@ -141,3 +141,7 @@ src/primitive_db/
 ```bash
 uv run ruff check .    # или: make lint
 ```
+
+## Демонстрация
+
+[![asciicast](https://asciinema.org/a/guzyzamA8gqMU33B.svg)](https://asciinema.org/a/guzyzamA8gqMU33B)
